@@ -1,0 +1,8 @@
+com/minderaschool/explorer/client/SensorHandler.class
+com/minderaschool/explorer/client/Parameters.class
+com/minderaschool/explorer/client/GpsMeasure.class
+com/minderaschool/explorer/client/Measures.class
+com/minderaschool/explorer/client/Robot.class
+com/minderaschool/explorer/client/ReplyHandler.class
+com/minderaschool/explorer/client/BeaconMeasure.class
+com/minderaschool/explorer/client/XmlParser.class

@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  explorer-tools:
+    command:
+      - /bin/bash
+      - -c
+      - ./startSimViewer
+    image: mindera-school/explorer-tools:latest
+    ports:
+      - 6000:6000/udp
+    environment:
+      - "DISPLAY=${X_SERVER_IP}:0"
+    build:
+      context: . # current dir as build context
+  explorer_gui_sample_agent:
+    command:
+      - /bin/bash
+      - -c
+      - sleep 10; cd GUISample; LD_LIBRARY_PATH=../libRobSock/ ./GUISample -pos 1 -robname GUI_SAMPLE_1 -host explorer-tools
+    image: mindera-school/explorer-tools:latest
+    environment:
+      - "DISPLAY=${X_SERVER_IP}:0"
+    build:
+      context: . # current dir as build context
+    depends_on:
+      - explorer-tools

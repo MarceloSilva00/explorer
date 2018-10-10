@@ -1,0 +1,5 @@
+#/bin/bash
+
+(cd Viewer; ./Viewer -autoconnect)&
+(cd simulator; ./simulator -gps -showactions)
+

@@ -1,0 +1,65 @@
+#!/bin/bash
+
+## Uncomment for DEBUG
+#set -o xtrace
+set -e
+set -o pipefail
+
+EXPLORER_TOOLS_IMAGE="mindera-school/explorer-tools:latest"
+EXPLORER_AGENT_IMAGE="mindera-school/explorer-tools:latest"
+
+# check if socat is installed
+if ! which socat > /dev/null 2>&1; then
+	echo "Installing dependency socat..."
+	brew install socat
+fi
+
+# check if socat is running
+if ! killall -s -0 socat > /dev/null 2>&1; then
+    echo "Launching socat process..."
+	socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\" &
+    sleep 5
+fi
+
+# check if Xquartz is installed
+if ! which Xquartz > /dev/null 2>&1; then
+	echo "Installing dependency xquartz..."
+	brew cask install xquartz
+fi
+
+# check if Xquartz is running
+if ! killall -s 0 Xquartz > /dev/null 2>&1; then
+	echo "Launching xquartz..."
+	open -a Xquartz
+	sleep 5
+fi
+
+# check if docker is installed
+if ! which docker > /dev/null 2>&1; then
+    echo "ERROR: Missing dependency docker. Install docker to fix this error."
+    exit 1
+fi
+
+# check if docker image $EXPLORER_TOOLS_IMAGE exists
+if ! docker inspect --type=image $EXPLORER_TOOLS_IMAGE > /dev/null 2>&1; then
+    echo "ERROR: Missing docker container $EXPLORER_TOOLS_IMAGE"
+    echo "build the docker container with the command \`docker build -t $EXPLORER_TOOLS_IMAGE .\` on the explorer-tools repo."
+    exit 1
+fi
+
+# check if docker image $EXPLORER_AGENT_IMAGE exists
+if ! docker inspect --type=image $EXPLORER_AGENT_IMAGE > /dev/null 2>&1; then
+    echo "ERROR: Missing docker container $EXPLORER_AGENT_IMAGE"
+    echo "build the docker container with the command \`docker build -t $EXPLORER_AGENT_IMAGE .\` on the explorer-agent repo."
+    exit 1
+fi
+
+# check if docker-compose is installed
+if ! which docker-compose > /dev/null 2>&1; then
+    echo "ERROR: Missing dependency docker-compose. Install docker-compose to fix this error."
+    exit -1
+fi
+
+# propagate ENVIRONMENT variables to docker-compose
+X_SERVER_IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}') docker-compose up
+

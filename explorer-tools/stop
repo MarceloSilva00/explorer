@@ -1,0 +1,21 @@
+#!/bin/bash
+
+## Uncomment for DEBUG
+#set -o xtrace
+
+echo "==> destroying containers.."
+docker-compose down
+echo "==> containers destroyed!"
+
+echo "==> killing Xquartz process.."
+killall Xquartz
+echo "==> Xquartz process killed!"
+
+echo "==> killing socat process.."
+killall socat
+echo "==> socat process killed!"
+
+echo "==> Removing old exited containers.."
+docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
+echo "==> Removed old exited containers!"
+

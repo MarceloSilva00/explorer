@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  explorer-tools:
+    command:
+      - /bin/bash
+      - -c
+      - ./startSimViewer
+    image: mindera-school/explorer-tools:latest
+    ports:
+      - 6000:6000/udp
+    environment:
+      - "DISPLAY=${X_SERVER_IP}:0"
+    build:
+      context: . # current dir as build context
+  explorer_agent:
+    command:
+      - /bin/bash
+      - -c
+      - "sleep 10; java -jar explorer-agent.jar -Djavax.accessibility.assistive_technologies=' ' -host explorer-tools:6000 -pos 1 -robname minder-explorer-agent"
+    image: mindera-school/explorer-agent:latest
+    environment:
+      - "DISPLAY=${X_SERVER_IP}:0"
+    depends_on:
+      - explorer-tools
+
