@@ -7,4 +7,5 @@ WORKDIR /etc/explorer-sample
 
 ADD target/explorer-agent-0.1.0.jar explorer-agent.jar
 
+
 CMD ["java", "-jar", "explorer-agent.jar", "-host", "localhost:6000", "-pos", "1", "-robname", "explorer-agent"]

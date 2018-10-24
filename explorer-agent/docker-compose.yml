@@ -17,10 +17,10 @@ services:
     command:
       - /bin/bash
       - -c
-      - "sleep 10; java -jar explorer-agent.jar -Djavax.accessibility.assistive_technologies=' ' -host explorer-tools:6000 -pos 1 -robname minder-explorer-agent"
+      - sleep 10; java -jar explorer-agent.jar -host explorer-tools:6000 -pos $ROBOT_POSITION -robname minder-explorer-agent
     image: mindera-school/explorer-agent:latest
     environment:
-      - "DISPLAY=${X_SERVER_IP}:0"
+    - "ROBOT_POSITION=${ROBOT_POSITION}"
     depends_on:
       - explorer-tools
 
